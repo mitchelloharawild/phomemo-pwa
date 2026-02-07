@@ -120,9 +120,6 @@ function App() {
       svgWidth = parseFloat(widthAttr);
     }
     
-    const padding = 20;
-    const maxTextWidth = svgWidth - (padding * 2);
-
     // Hide elements marked as hidden
     Object.entries(hiddenFields).forEach(([fieldId, isHidden]) => {
       if (isHidden) {
@@ -134,7 +131,7 @@ function App() {
     });
 
     // Update text fields in the SVG (async for QR codes, etc.)
-    await updateSVGTextFields(svgDoc, textFieldValues, maxTextWidth, currentTemplate.fieldMetadata);
+    await updateSVGTextFields(svgDoc, textFieldValues, currentTemplate.fieldMetadata);
 
     // Serialize the updated SVG
     const serializer = new XMLSerializer();

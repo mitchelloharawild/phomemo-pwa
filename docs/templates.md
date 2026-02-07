@@ -65,6 +65,24 @@ Text fields allow any text to be entered in the form.
 </text>
 ```
 
+### Auto-resizing Text
+
+By default, text fields maintain their original font size. To enable automatic font size adjustment when text is too long, add `data-autosize-max-width` with a numeric value specifying the maximum width in pixels:
+
+```xml
+<text 
+  id="product_name" 
+  x="192" 
+  y="100" 
+  font-size="24"
+  data-label="Product Name"
+  data-autosize-max-width="150">
+  Awesome Product
+</text>
+```
+
+When this attribute is set, the font size will automatically shrink to fit long text within the specified maximum width.
+
 > [!TIP]
 > Use `<tspan>` for text that spans multiple lines:
 >

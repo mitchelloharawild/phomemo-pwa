@@ -108,7 +108,6 @@ export const extractTextFieldIds = (svgContent: string): TextFieldInfo => {
 export const updateSVGTextFields = async (
   svgDoc: Document,
   textFields: Record<string, string>,
-  maxTextWidth: number,
   fieldMetadata?: FieldMetadata[]
 ): Promise<void> => {
   const svgElement = svgDoc.querySelector('svg');
@@ -141,7 +140,7 @@ export const updateSVGTextFields = async (
     const textElement = element as SVGTextElement;
     if (textElement.tagName !== 'text') return;
 
-    updateTextElement(svgDoc, textElement, value, maxTextWidth);
+    updateTextElement(svgDoc, textElement, value);
   });
 
   await Promise.all(updates);
@@ -153,11 +152,14 @@ export const updateSVGTextFields = async (
 const updateTextElement = (
   svgDoc: Document,
   textElement: SVGTextElement,
-  value: string,
-  maxTextWidth: number
+  value: string
 ): void => {
   const originalFontSize = parseFloat(textElement.getAttribute('font-size') || '32');
   let adjustedFontSize = originalFontSize;
+  
+  const autosizeMaxWidth = textElement.getAttribute('data-autosize-max-width');
+  const shouldAutoResize = autosizeMaxWidth !== null;
+  const maxWidth = shouldAutoResize ? parseFloat(autosizeMaxWidth) : 0;
 
   const dominantBaseline = textElement.getAttribute('dominant-baseline');
   const isMiddleAligned = dominantBaseline === 'middle';
@@ -166,23 +168,25 @@ const updateTextElement = (
   if (tspans.length > 0) {
     const lines = value.split('\n');
     
-    let longestLine = '';
-    lines.forEach(line => {
-      if (line.length > longestLine.length) {
-        longestLine = line;
+    if (shouldAutoResize) {
+      let longestLine = '';
+      lines.forEach(line => {
+        if (line.length > longestLine.length) {
+          longestLine = line;
+        }
+      });
+
+      if (longestLine) {
+        adjustedFontSize = calculateFontSize(
+          longestLine,
+          maxWidth,
+          originalFontSize,
+          textElement
+        );
       }
-    });
 
-    if (longestLine) {
-      adjustedFontSize = calculateFontSize(
-        longestLine,
-        maxTextWidth,
-        originalFontSize,
-        textElement
-      );
+      textElement.setAttribute('font-size', adjustedFontSize.toString());
     }
-
-    textElement.setAttribute('font-size', adjustedFontSize.toString());
 
     const firstTspan = tspans[0];
     const usesDy = firstTspan.hasAttribute('dy');
@@ -240,14 +244,18 @@ const updateTextElement = (
     });
   } else {
     const text = value || '';
-    adjustedFontSize = calculateFontSize(
-      text,
-      maxTextWidth,
-      originalFontSize,
-      textElement
-    );
     
-    textElement.setAttribute('font-size', adjustedFontSize.toString());
+    if (shouldAutoResize) {
+      adjustedFontSize = calculateFontSize(
+        text,
+        maxWidth,
+        originalFontSize,
+        textElement
+      );
+      
+      textElement.setAttribute('font-size', adjustedFontSize.toString());
+    }
+    
     textElement.textContent = text;
   }
 };
