@@ -15,4 +15,5 @@ export interface PrinterConfig {
   paperType: number; // 0x0a="Label With Gaps" 0x0b="Continuous" 0x26="Label With Marks"
   paperWidth: number; // in mm
   paperHeight: number; // in mm
+  orientation: 'portrait' | 'landscape'; // orientation affects printing rotation
 }

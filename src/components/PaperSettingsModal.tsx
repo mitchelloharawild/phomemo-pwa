@@ -18,14 +18,16 @@ const PaperSettingsModal: React.FC<PaperSettingsModalProps> = ({
   const [localConfig, setLocalConfig] = React.useState({
     paperType: config.paperType,
     paperWidth: config.paperWidth,
-    paperHeight: config.paperHeight
+    paperHeight: config.paperHeight,
+    orientation: config.orientation || 'portrait'
   });
 
   React.useEffect(() => {
     setLocalConfig({
       paperType: config.paperType,
       paperWidth: config.paperWidth,
-      paperHeight: config.paperHeight
+      paperHeight: config.paperHeight,
+      orientation: config.orientation || 'portrait'
     });
   }, [config]);
 
@@ -35,6 +37,13 @@ const PaperSettingsModal: React.FC<PaperSettingsModalProps> = ({
     setLocalConfig(prev => ({
       ...prev,
       [field]: value
+    }));
+  };
+
+  const handleOrientationChange = (orientation: 'portrait' | 'landscape') => {
+    setLocalConfig(prev => ({
+      ...prev,
+      orientation
     }));
   };
 
@@ -71,6 +80,30 @@ const PaperSettingsModal: React.FC<PaperSettingsModalProps> = ({
                 </option>
               ))}
             </select>
+          </div>
+
+          <div className="form-group">
+            <label>Orientation:</label>
+            <div className="orientation-buttons">
+              <button
+                className={`orientation-button ${localConfig.orientation === 'portrait' ? 'active' : ''}`}
+                onClick={() => handleOrientationChange('portrait')}
+                type="button"
+              >
+                📄 Portrait
+              </button>
+              <button
+                className={`orientation-button ${localConfig.orientation === 'landscape' ? 'active' : ''}`}
+                onClick={() => handleOrientationChange('landscape')}
+                type="button"
+              >
+                📃 Landscape
+              </button>
+            </div>
+            <small style={{ display: 'block', marginTop: '5px', color: '#666' }}>
+              {localConfig.orientation === 'landscape' && 
+                'Canvas will be rotated 90° clockwise during printing'}
+            </small>
           </div>
 
           <div className="form-group-inline">

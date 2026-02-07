@@ -102,6 +102,33 @@
   color: #666;
 }
 
+.orientation-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.orientation-button {
+  flex: 1;
+  padding: 10px 15px;
+  border: 2px solid #ddd;
+  border-radius: 4px;
+  background-color: white;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+
+.orientation-button:hover {
+  border-color: #007bff;
+  background-color: #f0f8ff;
+}
+
+.orientation-button.active {
+  border-color: #007bff;
+  background-color: #007bff;
+  color: white;
+}
+
 .modal-footer {
   display: flex;
   justify-content: flex-end;

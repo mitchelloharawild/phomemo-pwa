@@ -23,7 +23,8 @@ export const loadPrinterConfig = (deviceId: string): PrinterConfig | null => {
     const key = `${STORAGE_KEY_PREFIX}${deviceId}`;
     const stored = localStorage.getItem(key);
     if (stored) {
-      return JSON.parse(stored) as PrinterConfig;
+      const config = JSON.parse(stored) as PrinterConfig;
+      return config;
     }
   } catch (error) {
     console.error('Failed to load printer config:', error);
@@ -37,5 +38,6 @@ export const getDefaultConfig = (): PrinterConfig => ({
   speed: 0x05,
   paperType: 0x0a,
   paperWidth: 30,
-  paperHeight: 20
+  paperHeight: 20,
+  orientation: 'portrait'
 });

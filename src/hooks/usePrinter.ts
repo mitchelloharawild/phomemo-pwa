@@ -49,18 +49,41 @@ export const usePrinter = (): UsePrinterReturn => {
     setDeviceId(null);
   }, [serialPort]);
 
+  const rotateCanvas90Clockwise = (canvas: HTMLCanvasElement): HTMLCanvasElement => {
+    const rotatedCanvas = document.createElement('canvas');
+    rotatedCanvas.width = canvas.height;
+    rotatedCanvas.height = canvas.width;
+    
+    const ctx = rotatedCanvas.getContext('2d');
+    if (!ctx) {
+      throw new Error('Could not get canvas context for rotation');
+    }
+    
+    // Translate to center, rotate 90 degrees clockwise, then translate back
+    ctx.translate(rotatedCanvas.width / 2, rotatedCanvas.height / 2);
+    ctx.rotate(Math.PI / 2);
+    ctx.drawImage(canvas, -canvas.width / 2, -canvas.height / 2);
+    
+    return rotatedCanvas;
+  };
+
   const printImage = useCallback(async (canvas: HTMLCanvasElement, config: PrinterConfig): Promise<boolean> => {
     if (!serialPort) {
       console.error('No device connected');
       return false;
     }
 
-    const ctx = canvas.getContext('2d');
+    // Rotate canvas if in landscape mode
+    const printCanvas = config.orientation === 'landscape' 
+      ? rotateCanvas90Clockwise(canvas)
+      : canvas;
+
+    const ctx = printCanvas.getContext('2d');
     if (!ctx) {
       console.error('Could not get canvas context');
       return false;
     }
-    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const imageData = ctx.getImageData(0, 0, printCanvas.width, printCanvas.height);
 
     const arrayWidth = Math.ceil(imageData.width / 8);
     const arrayHeight = imageData.height;
