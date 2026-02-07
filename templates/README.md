@@ -48,6 +48,27 @@ Use cases:
 - VIP passes
 - Multi-function access cards
 
+### 4. [`template-optional-fields.svg`](template-optional-fields.svg)
+**Label with Optional Fields**
+
+Features:
+- Optional date field in top-right corner
+- Optional reference number in top-left corner
+- Optional QR code in bottom-right
+- Optional notes field in bottom-left
+- Required name and description fields
+- Demonstrates show/hide toggle functionality
+
+Use cases:
+- Flexible product labels
+- Shipping labels (with/without date)
+- General purpose labels
+- Templates where not all fields are always needed
+
+> [!TIP]
+> Optional fields have an eye icon (👁️) next to their label in the form. 
+> Click the eye to hide/show the element in the canvas preview and print output.
+
 ## Contributing
 
 Have you created a useful template? Consider sharing it, [pull requests](github.com/mitchelloharawild/phomemo-pwa/pulls) with additional templates are welcomed!

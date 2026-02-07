@@ -84,6 +84,38 @@
   margin-bottom: 16px;
 }
 
+.form-field-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.form-field-header label {
+  margin-bottom: 0;
+  flex: 1;
+}
+
+.field-toggle-btn {
+  background: none;
+  border: none;
+  color: #aaa;
+  cursor: pointer;
+  padding: 4px 8px;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  transition: color 0.2s;
+}
+
+.field-toggle-btn:hover {
+  color: #fff;
+}
+
+.field-toggle-btn.hidden {
+  opacity: 0.5;
+}
+
 .checkbox-wrapper label {
   margin-bottom: 0;
 }

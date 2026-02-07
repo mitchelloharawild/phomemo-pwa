@@ -35,6 +35,7 @@ export const extractFieldMetadata = (element: Element): FieldMetadata => {
     id,
     type,
     label: element.getAttribute('data-label') || undefined,
+    optional: element.getAttribute('data-optional') === 'true',
   };
   
   if (type === FieldType.QR) {

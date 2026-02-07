@@ -1,0 +1,105 @@
+<!--
+  Example SVG Template: Badge with Optional Fields
+  
+  Optional Fields Schema:
+  - data-optional="true": Marks a field as optional (adds a toggleable eye icon in the form)
+  
+  This template demonstrates how to use optional fields for elements that
+  may or may not be needed in every print job (like dates, reference numbers, etc.)
+-->
+<svg xmlns="http://www.w3.org/2000/svg" width="384" height="240" viewBox="0 0 384 240">
+  <!-- Background -->
+  <rect width="384" height="240" fill="white"/>
+  
+  <!-- Border -->
+  <rect x="10" y="10" width="364" height="220" fill="none" stroke="black" stroke-width="2"/>
+  
+  <!-- Optional Date (top-right corner) -->
+  <text 
+    id="print_date" 
+    x="360" 
+    y="30" 
+    font-size="12" 
+    text-anchor="end" 
+    font-family="Arial, sans-serif"
+    data-field-type="date"
+    data-label="Print Date"
+    data-date-format="YYYY-MM-DD"
+    data-optional="true">
+    2024-01-01
+  </text>
+  
+  <!-- Optional Reference Number (top-left corner) -->
+  <text 
+    id="reference" 
+    x="25" 
+    y="30" 
+    font-size="12" 
+    text-anchor="start" 
+    font-family="Arial, sans-serif"
+    data-field-type="text"
+    data-label="Reference #"
+    data-optional="true">
+    REF-001
+  </text>
+  
+  <!-- Title (required) -->
+  <text x="192" y="70" font-size="24" font-weight="bold" text-anchor="middle" font-family="Arial, sans-serif">
+    LABEL TEMPLATE
+  </text>
+  
+  <!-- Name field (required) -->
+  <text 
+    id="name" 
+    x="192" 
+    y="120" 
+    font-size="20" 
+    text-anchor="middle" 
+    font-family="Arial, sans-serif"
+    data-field-type="text"
+    data-label="Name">
+    Sample Name
+  </text>
+  
+  <!-- Description field (required) -->
+  <text 
+    id="description" 
+    x="192" 
+    y="160" 
+    font-size="16" 
+    text-anchor="middle" 
+    font-family="Arial, sans-serif"
+    data-field-type="text"
+    data-label="Description">
+    Sample Description
+  </text>
+  
+  <!-- Optional QR Code (bottom-right) -->
+  <rect 
+    id="qr_code" 
+    x="310" 
+    y="170" 
+    width="50" 
+    height="50" 
+    fill="white" 
+    stroke="black"
+    data-field-type="qr"
+    data-label="QR Code"
+    data-qr-version="auto"
+    data-qr-error-correction="M"
+    data-optional="true"/>
+  
+  <!-- Optional Notes (bottom-left) -->
+  <text 
+    id="notes" 
+    x="25" 
+    y="200" 
+    font-size="10" 
+    text-anchor="start" 
+    font-family="Arial, sans-serif"
+    data-field-type="text"
+    data-label="Notes"
+    data-optional="true">
+    Optional notes here
+  </text>
+</svg>

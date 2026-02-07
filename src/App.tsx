@@ -17,6 +17,7 @@ function App() {
   const [textFieldValues, setTextFieldValues] = useState<Record<string, string>>(
     getDefaultTemplate().textFieldValues
   );
+  const [hiddenFields, setHiddenFields] = useState<Record<string, boolean>>({});
 
   const [printerConfig, setPrinterConfig] = useState<PrinterConfig>(getDefaultConfig());
 
@@ -122,6 +123,16 @@ function App() {
     const padding = 20;
     const maxTextWidth = svgWidth - (padding * 2);
 
+    // Hide elements marked as hidden
+    Object.entries(hiddenFields).forEach(([fieldId, isHidden]) => {
+      if (isHidden) {
+        const element = svgDoc.getElementById(fieldId);
+        if (element) {
+          element.style.display = 'none';
+        }
+      }
+    });
+
     // Update text fields in the SVG (async for QR codes, etc.)
     await updateSVGTextFields(svgDoc, textFieldValues, maxTextWidth, currentTemplate.fieldMetadata);
 
@@ -163,6 +174,7 @@ function App() {
   const handleSelectTemplate = (template: Template) => {
     setCurrentTemplate(template);
     setTextFieldValues(template.textFieldValues);
+    setHiddenFields({}); // Reset hidden fields for new template
     
     // Update printer config with template info and save
     const updatedConfig: PrinterConfig = {
@@ -192,6 +204,10 @@ function App() {
     if (deviceId) {
       savePrinterConfig(deviceId, updatedConfig);
     }
+  };
+
+  const handleFieldVisibilityChange = (fieldId: string, isHidden: boolean) => {
+    setHiddenFields(prev => ({ ...prev, [fieldId]: isHidden }));
   };
 
   return (
@@ -299,6 +315,8 @@ function App() {
               template={currentTemplate}
               textFieldValues={textFieldValues}
               onTextFieldChange={handleTextFieldChange}
+              hiddenFields={hiddenFields}
+              onFieldVisibilityChange={handleFieldVisibilityChange}
             />
 
             <button 
@@ -319,7 +337,8 @@ function App() {
             <PrinterCanvas 
               template={currentTemplate}
               textFieldValues={textFieldValues}
-              printerConfig={printerConfig} 
+              printerConfig={printerConfig}
+              hiddenFields={hiddenFields}
             />
           </>
         )}

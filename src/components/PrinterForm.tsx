@@ -7,11 +7,23 @@ interface PrinterFormProps {
   template: Template | null;
   textFieldValues: Record<string, string>;
   onTextFieldChange: (fieldId: string, value: string) => void;
+  hiddenFields: Record<string, boolean>;
+  onFieldVisibilityChange: (fieldId: string, isHidden: boolean) => void;
 }
 
-const PrinterForm = ({ template, textFieldValues, onTextFieldChange }: PrinterFormProps) => {
+const PrinterForm = ({ 
+  template, 
+  textFieldValues, 
+  onTextFieldChange,
+  hiddenFields,
+  onFieldVisibilityChange
+}: PrinterFormProps) => {
   const handleChange = (fieldId: string, value: string) => {
     onTextFieldChange(fieldId, value);
+  };
+
+  const toggleFieldVisibility = (fieldId: string) => {
+    onFieldVisibilityChange(fieldId, !hiddenFields[fieldId]);
   };
 
   if (!template) {
@@ -39,22 +51,38 @@ const PrinterForm = ({ template, textFieldValues, onTextFieldChange }: PrinterFo
     const metadata = metadataMap.get(fieldId);
     const label = metadata?.label || fieldId;
     const value = textFieldValues[fieldId] || '';
+    const isOptional = metadata?.optional === true;
+    const isHidden = hiddenFields[fieldId] === true;
 
     // Render based on field type
     if (metadata?.type === 'date') {
       return (
         <div key={fieldId} className="form-field">
-          <label htmlFor={fieldId}>{label}:</label>
-          <input
-            type="date"
-            id={fieldId}
-            name={fieldId}
-            value={value}
-            onChange={(e) => handleChange(fieldId, e.target.value)}
-          />
-          {metadata.dateFormat && (
-            <small className="field-hint">Format: {metadata.dateFormat}</small>
-          )}
+          <div className="form-field-header">
+            <label htmlFor={fieldId}>{label}:</label>
+            {isOptional && (
+              <button
+                type="button"
+                className={`field-toggle-btn ${isHidden ? 'hidden' : ''}`}
+                onClick={() => toggleFieldVisibility(fieldId)}
+                title={isHidden ? 'Show in canvas' : 'Hide from canvas'}
+              >
+                {isHidden ? '👁️‍🗨️' : '👁️'}
+              </button>
+            )}
+          </div>
+          <div className="field-input-container">
+            <input
+              type="date"
+              id={fieldId}
+              name={fieldId}
+              value={value}
+              onChange={(e) => handleChange(fieldId, e.target.value)}
+            />
+            {metadata.dateFormat && (
+              <small className="field-hint">Format: {metadata.dateFormat}</small>
+            )}
+          </div>
         </div>
       );
     }
@@ -62,18 +90,32 @@ const PrinterForm = ({ template, textFieldValues, onTextFieldChange }: PrinterFo
     if (metadata?.type === 'qr') {
       return (
         <div key={fieldId} className="form-field">
-          <label htmlFor={fieldId}>{label}:</label>
-          <input
-            type="text"
-            id={fieldId}
-            name={fieldId}
-            value={value}
-            onChange={(e) => handleChange(fieldId, e.target.value)}
-            placeholder={`Enter ${label} (will be encoded as QR code)`}
-          />
-          <small className="field-hint">
-            📱 QR Code • Error correction: {metadata.qrErrorCorrection || 'M'}
-          </small>
+          <div className="form-field-header">
+            <label htmlFor={fieldId}>{label}:</label>
+            {isOptional && (
+              <button
+                type="button"
+                className={`field-toggle-btn ${isHidden ? 'hidden' : ''}`}
+                onClick={() => toggleFieldVisibility(fieldId)}
+                title={isHidden ? 'Show in canvas' : 'Hide from canvas'}
+              >
+                {isHidden ? '👁️‍🗨️' : '👁️'}
+              </button>
+            )}
+          </div>
+          <div className="field-input-container">
+            <input
+              type="text"
+              id={fieldId}
+              name={fieldId}
+              value={value}
+              onChange={(e) => handleChange(fieldId, e.target.value)}
+              placeholder={`Enter ${label} (will be encoded as QR code)`}
+            />
+            <small className="field-hint">
+              📱 QR Code • Error correction: {metadata.qrErrorCorrection || 'M'}
+            </small>
+          </div>
         </div>
       );
     }
@@ -81,29 +123,43 @@ const PrinterForm = ({ template, textFieldValues, onTextFieldChange }: PrinterFo
     if (metadata?.type === 'image') {
       return (
         <div key={fieldId} className="form-field">
-          <label htmlFor={fieldId}>{label}:</label>
-          <input
-            type="file"
-            id={fieldId}
-            name={fieldId}
-            accept="image/*"
-            onChange={(e) => {
-              const file = e.target.files?.[0];
-              if (file) {
-                const reader = new FileReader();
-                reader.onload = (event) => {
-                  const dataUrl = event.target?.result as string;
-                  handleChange(fieldId, dataUrl);
-                };
-                reader.readAsDataURL(file);
-              }
-            }}
-          />
-          {value && (
-            <div className="image-preview">
-              <img src={value} alt="Preview" style={{ maxWidth: '100px', maxHeight: '100px' }} />
-            </div>
-          )}
+          <div className="form-field-header">
+            <label htmlFor={fieldId}>{label}:</label>
+            {isOptional && (
+              <button
+                type="button"
+                className={`field-toggle-btn ${isHidden ? 'hidden' : ''}`}
+                onClick={() => toggleFieldVisibility(fieldId)}
+                title={isHidden ? 'Show in canvas' : 'Hide from canvas'}
+              >
+                {isHidden ? '👁️‍🗨️' : '👁️'}
+              </button>
+            )}
+          </div>
+          <div className="field-input-container">
+            <input
+              type="file"
+              id={fieldId}
+              name={fieldId}
+              accept="image/*"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) {
+                  const reader = new FileReader();
+                  reader.onload = (event) => {
+                    const dataUrl = event.target?.result as string;
+                    handleChange(fieldId, dataUrl);
+                  };
+                  reader.readAsDataURL(file);
+                }
+              }}
+            />
+            {value && (
+              <div className="image-preview">
+                <img src={value} alt="Preview" style={{ maxWidth: '100px', maxHeight: '100px' }} />
+              </div>
+            )}
+          </div>
         </div>
       );
     }
@@ -112,30 +168,58 @@ const PrinterForm = ({ template, textFieldValues, onTextFieldChange }: PrinterFo
     if (multiLineFields.has(fieldId)) {
       return (
         <div key={fieldId} className="form-field">
-          <label htmlFor={fieldId}>{label}:</label>
-          <textarea
-            id={fieldId}
-            name={fieldId}
-            value={value}
-            onChange={(e) => handleChange(fieldId, e.target.value)}
-            placeholder={`Enter ${label}`}
-            rows={3}
-          />
+          <div className="form-field-header">
+            <label htmlFor={fieldId}>{label}:</label>
+            {isOptional && (
+              <button
+                type="button"
+                className={`field-toggle-btn ${isHidden ? 'hidden' : ''}`}
+                onClick={() => toggleFieldVisibility(fieldId)}
+                title={isHidden ? 'Show in canvas' : 'Hide from canvas'}
+              >
+                {isHidden ? '👁️‍🗨️' : '👁️'}
+              </button>
+            )}
+          </div>
+          <div className="field-input-container">
+            <textarea
+              id={fieldId}
+              name={fieldId}
+              value={value}
+              onChange={(e) => handleChange(fieldId, e.target.value)}
+              placeholder={`Enter ${label}`}
+              rows={3}
+            />
+          </div>
         </div>
       );
     }
 
     return (
       <div key={fieldId} className="form-field">
-        <label htmlFor={fieldId}>{label}:</label>
-        <input
-          type="text"
-          id={fieldId}
-          name={fieldId}
-          value={value}
-          onChange={(e) => handleChange(fieldId, e.target.value)}
-          placeholder={`Enter ${label}`}
-        />
+        <div className="form-field-header">
+          <label htmlFor={fieldId}>{label}:</label>
+          {isOptional && (
+            <button
+              type="button"
+              className={`field-toggle-btn ${isHidden ? 'hidden' : ''}`}
+              onClick={() => toggleFieldVisibility(fieldId)}
+              title={isHidden ? 'Show in canvas' : 'Hide from canvas'}
+            >
+              {isHidden ? '👁️‍🗨️' : '👁️'}
+            </button>
+          )}
+        </div>
+        <div className="field-input-container">
+          <input
+            type="text"
+            id={fieldId}
+            name={fieldId}
+            value={value}
+            onChange={(e) => handleChange(fieldId, e.target.value)}
+            placeholder={`Enter ${label}`}
+          />
+        </div>
       </div>
     );
   };

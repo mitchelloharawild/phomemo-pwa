@@ -21,6 +21,33 @@ Elements you want to be editable must have an `id` attribute.
 
 Optionally, a `data-label` field can be used to specify a friendly name shown in the form (if not specified, `id` is used instead.)
 
+## Optional Fields
+
+Fields can be marked as optional by adding `data-optional="true"`. Optional fields include an eye icon toggle in the form label that allows users to hide the field in the label.
+```xml
+<text 
+  id="reference_number" 
+  x="25" 
+  y="30" 
+  font-size="12"
+  data-field-type="text"
+  data-label="Reference #"
+  data-optional="true">
+  REF-001
+</text>
+```
+
+When marked as optional:
+- An eye icon (👁️) appears next to the field label
+- Clicking the icon hides/shows the element in label
+
+> [!TIP]
+> Use optional fields for:
+> - Print dates that may not always be needed
+> - Reference numbers or batch codes that are conditional
+> - QR codes for supplementary information
+> - Additional notes or comments that are sometimes omitted
+
 # Field types
 
 ## Text Field

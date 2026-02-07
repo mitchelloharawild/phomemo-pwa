@@ -19,6 +19,7 @@ export interface FieldMetadata {
   id: string;
   type: FieldType;
   label?: string; // Optional display label from data-label attribute
+  optional?: boolean; // Whether the field is optional (can be hidden/shown)
   // QR code specific options
   qrVersion?: string; // QR code version (1-40, or 'auto')
   qrErrorCorrection?: 'L' | 'M' | 'Q' | 'H'; // Error correction level

@@ -83,7 +83,8 @@ export const generateTemplateId = (): string => {
 
 export const createDefaultTemplate = (): Template => {
   const svgContent = `<svg width="150" height="100" version="1.1" viewBox="0 0 150 100" xmlns="http://www.w3.org/2000/svg">
- <text id="Text" x="50%" y="50%" font-family="Arial" font-size="16" text-anchor="middle" dominant-baseline="middle">
+ <text id="date" x="145" y="15" font-family="Arial" font-size="14" text-anchor="end" data-field-type="date" data-label="Date" data-date-format="YYYY-MM-DD" data-optional="true">2024-01-01</text>
+ <text id="Text" x="50%" y="50%" font-family="Arial" font-size="26" text-anchor="middle" dominant-baseline="middle">
   <tspan x="50%" dy="0">Text</tspan>
  </text>
 </svg>`;
@@ -92,8 +93,18 @@ export const createDefaultTemplate = (): Template => {
     id: DEFAULT_TEMPLATE_ID,
     name: 'No template',
     svgContent,
-    textFieldValues: { Text: 'Line 1\nLine 2\nLine 3' },
+    textFieldValues: { 
+      Text: '',
+      date: new Date().toISOString().split('T')[0]
+    },
     fieldMetadata: [
+      {
+        id: 'date',
+        type: 'date' as FieldType,
+        label: 'Date',
+        dateFormat: 'YYYY-MM-DD',
+        optional: true
+      },
       {
         id: 'Text',
         type: 'text' as FieldType,
