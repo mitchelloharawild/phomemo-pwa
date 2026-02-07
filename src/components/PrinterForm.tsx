@@ -10,12 +10,11 @@ interface PrinterFormProps {
 const PrinterForm = ({ formData, setFormData }: PrinterFormProps) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const target = e.target as HTMLInputElement;
-    const { name, value, type, checked, files } = target;
+    const { name, value, type, checked } = target;
     
     if (type === 'checkbox') {
       setFormData(prev => ({ ...prev, [name]: checked }));
-    } else if (type === 'file' && files) {
-      setFormData(prev => ({ ...prev, [name]: files[0] }));
+    
     } else {
       setFormData(prev => ({ ...prev, [name]: value }));
     }
@@ -33,7 +32,7 @@ const PrinterForm = ({ formData, setFormData }: PrinterFormProps) => {
         placeholder="Enter text for QR code"
       />
 
-<label htmlFor="centeredText">Text:</label>
+      <label htmlFor="centeredText">Text:</label>
       <textarea
         id="centeredText"
         name="centeredText"
@@ -65,16 +64,7 @@ const PrinterForm = ({ formData, setFormData }: PrinterFormProps) => {
         )}
       </div>
 
-      <div className="input-group">
-        <label htmlFor="image">Upload Image:</label>
-        <input
-          type="file"
-          id="image"
-          name="image"
-          onChange={handleChange}
-          accept="image/*"
-        />
-      </div>
+
     </form>
   );
 };

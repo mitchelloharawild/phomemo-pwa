@@ -30,6 +30,7 @@ Simply visit <https://pkg.mitchelloharawild.com/phomemo-pwa> to start using the 
 - 🎯 **Real-time Preview** - See exactly what will print before sending to device
 - 💾 **Save Settings** - Your printer and paper settings are remembered between sessions
 - 🔒 **Privacy First** - All processing happens locally in your browser
+- 🎨 **SVG Templates** - Use customizable SVG templates with replaceable content
 
 ## 📖 Usage Guide
 

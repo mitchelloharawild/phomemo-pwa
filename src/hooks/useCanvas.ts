@@ -29,6 +29,13 @@ export const useCanvas = (formData: FormData, printerConfig: PrinterConfig) => {
     ctx.fillStyle = '#fff';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+    // Draw SVG template if present
+    if (printerConfig.svgTemplate && printerConfig.svgTextFields) {
+      drawSVGTemplate(ctx, canvas, printerConfig.svgTemplate, printerConfig.svgTextFields);
+      // If using template, skip the legacy drawing methods
+      return;
+    }
+
     // Draw uploaded image if present
     if (formData.image) {
       drawImage(ctx, canvas, formData.image);
@@ -51,6 +58,79 @@ export const useCanvas = (formData: FormData, printerConfig: PrinterConfig) => {
   }, [formData, printerConfig]);
 
   return canvasRef;
+};
+
+const drawSVGTemplate = (
+  ctx: CanvasRenderingContext2D, 
+  canvas: HTMLCanvasElement, 
+  svgTemplate: string, 
+  textFields: Record<string, string>
+): void => {
+  const parser = new DOMParser();
+  const svgDoc = parser.parseFromString(svgTemplate, 'image/svg+xml');
+  const svgElement = svgDoc.querySelector('svg');
+  
+  if (!svgElement) return;
+
+  // Update text elements with new values
+  Object.entries(textFields).forEach(([id, value]) => {
+    const textElement = svgDoc.getElementById(id);
+    if (!textElement) return;
+
+    // Check if it's a multi-line text (has tspan children)
+    const tspans = textElement.querySelectorAll('tspan');
+    if (tspans.length > 0) {
+      // Multi-line: split value by newlines and update tspans
+      const lines = value.split('\n');
+      tspans.forEach((tspan, index) => {
+        if (index < lines.length) {
+          tspan.textContent = lines[index];
+        } else {
+          tspan.textContent = '';
+        }
+      });
+    } else {
+      // Single-line: just update the text content
+      textElement.textContent = value;
+    }
+  });
+
+  // Serialize the updated SVG
+  const serializer = new XMLSerializer();
+  const updatedSvgString = serializer.serializeToString(svgDoc);
+
+  // Convert SVG to image and draw on canvas
+  const img = new Image();
+  const blob = new Blob([updatedSvgString], { type: 'image/svg+xml' });
+  const url = URL.createObjectURL(blob);
+
+  img.onload = () => {
+    // Draw SVG to fill the canvas
+    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+    URL.revokeObjectURL(url);
+
+    // Apply dithering to convert to black and white
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const data = imageData.data;
+
+    // Floyd-Steinberg Dithering
+    for (let i = 0; i < data.length; i += 4) {
+      let oldPixel = data[i] * 0.299 + data[i + 1] * 0.587 + data[i + 2] * 0.114;
+      const newPixel = oldPixel < 128 ? 0 : 255;
+      const quantError = oldPixel - newPixel;
+
+      data[i] = data[i + 1] = data[i + 2] = newPixel;
+
+      if (i + 4 < data.length) data[i + 4] += quantError * 7 / 16;
+      if (i + canvas.width * 4 - 4 < data.length) data[i + canvas.width * 4 - 4] += quantError * 3 / 16;
+      if (i + canvas.width * 4 < data.length) data[i + canvas.width * 4] += quantError * 5 / 16;
+      if (i + canvas.width * 4 + 4 < data.length) data[i + canvas.width * 4 + 4] += quantError * 1 / 16;
+    }
+
+    ctx.putImageData(imageData, 0, 0);
+  };
+
+  img.src = url;
 };
 
 const drawImage = (ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement, file: File): void => {

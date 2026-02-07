@@ -14,4 +14,6 @@ export interface PrinterConfig {
   paperWidth: number; // in mm
   paperHeight: number; // in mm
   orientation: 'portrait' | 'landscape'; // orientation affects printing rotation
+  svgTemplate?: string; // SVG template content
+  svgTextFields?: Record<string, string>; // text field IDs and their values
 }
