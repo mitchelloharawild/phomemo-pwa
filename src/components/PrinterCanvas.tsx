@@ -1,13 +1,14 @@
 import { useCanvas } from '../hooks/useCanvas';
-import type { FormData } from '../types';
+import type { FormData, PrinterConfig } from '../types';
 import './PrinterCanvas.css';
 
 interface PrinterCanvasProps {
   formData: FormData;
+  printerConfig: PrinterConfig;
 }
 
-const PrinterCanvas = ({ formData }: PrinterCanvasProps) => {
-  const canvasRef = useCanvas(formData);
+const PrinterCanvas = ({ formData, printerConfig }: PrinterCanvasProps) => {
+  const canvasRef = useCanvas(formData, printerConfig);
 
   return (
     <canvas 

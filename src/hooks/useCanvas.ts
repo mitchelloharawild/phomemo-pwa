@@ -1,9 +1,9 @@
 import { useEffect, useRef } from 'react';
-import type { FormData } from '../types';
+import type { FormData, PrinterConfig } from '../types';
 
 const mmToPx = (mm: number): number => mm * 203 / 25.4;
 
-export const useCanvas = (formData: FormData) => {
+export const useCanvas = (formData: FormData, printerConfig: PrinterConfig) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -12,8 +12,14 @@ export const useCanvas = (formData: FormData) => {
 
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
-    const widthPx = mmToPx(formData.width);
-    const heightPx = mmToPx(formData.height);
+    
+    // Apply orientation to preview dimensions
+    const isLandscape = printerConfig.orientation === 'landscape';
+    const displayWidth = isLandscape ? printerConfig.paperHeight : printerConfig.paperWidth;
+    const displayHeight = isLandscape ? printerConfig.paperWidth : printerConfig.paperHeight;
+    
+    const widthPx = mmToPx(displayWidth);
+    const heightPx = mmToPx(displayHeight);
 
     canvas.width = widthPx;
     canvas.height = heightPx;
@@ -42,7 +48,7 @@ export const useCanvas = (formData: FormData) => {
     if (formData.centeredText.trim()) {
       drawCenteredText(ctx, canvas, formData.centeredText, formData.qrText.trim() !== '');
     }
-  }, [formData]);
+  }, [formData, printerConfig]);
 
   return canvasRef;
 };

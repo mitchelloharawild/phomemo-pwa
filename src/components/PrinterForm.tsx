@@ -33,32 +33,7 @@ const PrinterForm = ({ formData, setFormData }: PrinterFormProps) => {
         placeholder="Enter text for QR code"
       />
 
-      <div className="input-group">
-        <div>
-          <label htmlFor="width">Width (mm):</label>
-          <input
-            type="number"
-            id="width"
-            name="width"
-            value={formData.width}
-            onChange={handleChange}
-            placeholder="Width in mm"
-          />
-        </div>
-        <div>
-          <label htmlFor="height">Height (mm):</label>
-          <input
-            type="number"
-            id="height"
-            name="height"
-            value={formData.height}
-            onChange={handleChange}
-            placeholder="Height in mm"
-          />
-        </div>
-      </div>
-
-      <label htmlFor="centeredText">Text:</label>
+<label htmlFor="centeredText">Text:</label>
       <textarea
         id="centeredText"
         name="centeredText"

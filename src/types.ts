@@ -1,7 +1,5 @@
 export interface FormData {
   qrText: string;
-  width: number;
-  height: number;
   centeredText: string;
   useDate: boolean;
   date: string;

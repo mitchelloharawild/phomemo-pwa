@@ -3,6 +3,7 @@
 A modern Progressive Web App (PWA) for printing custom stickers using the Phomemo M110 printer via Web Serial API.
 
 > **Disclaimer:** This project was mostly vibe-coded with Claude 🤖
+> 
 > Please report any issues here: <https://github.com/mitchelloharawild/phomemo-pwa/issues>
 
 This app uses the [Web Serial API over Bluetooth](https://developer.chrome.com/blog/serial-over-bluetooth/), which requires a modern Chromium-based web browser (Chrome/Chromium 89+, Microsoft Edge 89+, Opera 75+). Safari and Firefox do not currently support the Web Serial API.

@@ -11,8 +11,6 @@ import './App.css';
 function App() {
   const [formData, setFormData] = useState<FormData>({
     qrText: '',
-    width: 30,
-    height: 20,
     centeredText: '',
     useDate: true,
     date: new Date().toISOString().split('T')[0],
@@ -33,21 +31,10 @@ function App() {
       const savedConfig = loadPrinterConfig(deviceId);
       if (savedConfig) {
         setPrinterConfig(savedConfig);
-        // Update form data dimensions to match saved paper size
-        setFormData(prev => ({
-          ...prev,
-          width: savedConfig.paperWidth,
-          height: savedConfig.paperHeight
-        }));
       } else {
         // Use default config for new devices
         const defaultConfig = getDefaultConfig();
         setPrinterConfig(defaultConfig);
-        setFormData(prev => ({
-          ...prev,
-          width: defaultConfig.paperWidth,
-          height: defaultConfig.paperHeight
-        }));
       }
     }
   }, [deviceId]);
@@ -69,12 +56,6 @@ function App() {
 
   const handleSaveConfig = (config: PrinterConfig) => {
     setPrinterConfig(config);
-    // Update form data dimensions if paper size changed
-    setFormData(prev => ({
-      ...prev,
-      width: config.paperWidth,
-      height: config.paperHeight
-    }));
     
     // Save config to localStorage for this device
     if (deviceId) {
@@ -85,14 +66,6 @@ function App() {
   const handleSavePaperSettings = (paperSettings: Partial<PrinterConfig>) => {
     const updatedConfig = { ...printerConfig, ...paperSettings };
     setPrinterConfig(updatedConfig);
-    // Update form data dimensions if paper size changed
-    if (paperSettings.paperWidth !== undefined && paperSettings.paperHeight !== undefined) {
-      setFormData(prev => ({
-        ...prev,
-        width: paperSettings.paperWidth!,
-        height: paperSettings.paperHeight!
-      }));
-    }
     
     // Save config to localStorage for this device
     if (deviceId) {
@@ -149,7 +122,7 @@ function App() {
           🖨 Print Sticker
         </button>
 
-        <PrinterCanvas formData={formData} />
+        <PrinterCanvas formData={formData} printerConfig={printerConfig} />
       </div>
 
       <PrinterSetupModal
