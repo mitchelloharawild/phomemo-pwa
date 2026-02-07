@@ -26,7 +26,17 @@ export const usePrinter = (): UsePrinterReturn => {
 
     try {
       const port = await navigator.serial.requestPort();
-      await port.open({ baudRate: 128000 });
+      
+      // Create a promise that rejects after 10 seconds
+      const timeoutPromise = new Promise<never>((_, reject) => {
+        setTimeout(() => reject(new Error('Connection timeout after 10 seconds')), 10000);
+      });
+      
+      // Race between opening the port and the timeout
+      await Promise.race([
+        port.open({ baudRate: 128000 }),
+        timeoutPromise
+      ]);
       
       const id = getDeviceId(port);
       
@@ -36,7 +46,14 @@ export const usePrinter = (): UsePrinterReturn => {
       return true;
     } catch (e) {
       console.error('Failed to connect:', e);
-      return false;
+      
+      // User cancelled the connection dialog
+      if (e instanceof DOMException && e.name === 'NotFoundError') {
+        return false;
+      }
+      
+      // Rethrow other errors to be handled by the caller
+      throw e;
     }
   }, [serialPort]);
 

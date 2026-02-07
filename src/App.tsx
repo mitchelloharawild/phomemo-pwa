@@ -23,6 +23,9 @@ function App() {
   const [isPaperSettingsModalOpen, setIsPaperSettingsModalOpen] = useState(false);
   const [isTemplateModalOpen, setIsTemplateModalOpen] = useState(false);
 
+  const [isConnecting, setIsConnecting] = useState(false);
+  const [notification, setNotification] = useState<{ message: string; type: 'error' | 'success' } | null>(null);
+
   const { isConnected, deviceId, connect, disconnect, printImage } = usePrinter();
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -66,7 +69,19 @@ function App() {
   }, [deviceId]);
 
   const handleConnect = async () => {
-    await connect();
+    setIsConnecting(true);
+    try {
+      const success = await connect();
+      if (!success) {
+        setNotification({ message: 'Failed to connect to printer. Please try again.', type: 'error' });
+        setTimeout(() => setNotification(null), 5000);
+      }
+    } catch (error) {
+      setNotification({ message: 'Connection failed: ' + (error instanceof Error ? error.message : 'Unknown error'), type: 'error' });
+      setTimeout(() => setNotification(null), 5000);
+    } finally {
+      setIsConnecting(false);
+    }
   };
 
   const handleDisconnect = async () => {
@@ -180,6 +195,12 @@ function App() {
 
   return (
     <div className="app-container">
+      {notification && (
+        <div className={`notification notification-${notification.type}`}>
+          {notification.message}
+        </div>
+      )}
+      
       <div className="form-container">
         <h2>Phomemo Printer</h2>
         
@@ -196,9 +217,9 @@ function App() {
             <button 
               className="print-button connect-button" 
               onClick={handleConnect}
-              disabled={!isSerialSupported}
+              disabled={!isSerialSupported || isConnecting}
             >
-              Connect printer
+              {isConnecting ? 'Connecting...' : 'Connect printer'}
             </button>
             
             <div className="quick-start-guide">
