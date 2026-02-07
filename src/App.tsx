@@ -25,6 +25,9 @@ function App() {
   const { isConnected, deviceId, connect, disconnect, printImage } = usePrinter();
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
+  // Check if browser supports Web Serial API
+  const isSerialSupported = 'serial' in navigator;
+
   // Load printer config when device connects
   useEffect(() => {
     if (deviceId) {
@@ -135,32 +138,79 @@ function App() {
         <h2>Phomemo Printer</h2>
         
         {!isConnected ? (
-          <button 
-            className="print-button connect-button" 
-            onClick={handleConnect}
-          >
-            Connect printer
-          </button>
-        ) : (
-          <div className="connection-controls">
-            <button 
-              className="print-button disconnect-button" 
-              onClick={handleDisconnect}
-            >
-              Disconnect
-            </button>
-            <button 
-              className="settings-button-small" 
-              onClick={() => setIsSetupModalOpen(true)}
-              title="Printer Settings"
-            >
-              ⚙️
-            </button>
-          </div>
-        )}
-        
-        {isConnected && (
           <>
+            {!isSerialSupported && (
+              <div className="browser-warning">
+                <p><strong>⚠️ Unsupported Browser</strong></p>
+                <p>This app requires the Web Serial API, which is available in Chrome/Chromium 89+, Microsoft Edge 89+, and Opera 75+.</p>
+                <p>Safari and Firefox do not currently support this API.</p>
+              </div>
+            )}
+
+            <button 
+              className="print-button connect-button" 
+              onClick={handleConnect}
+              disabled={!isSerialSupported}
+            >
+              Connect printer
+            </button>
+            
+            <div className="quick-start-guide">
+              <div className="guide-section">
+                <h4>Supported Printers</h4>
+                <ul>
+                  <li>✅ Phomemo M110 (tested)</li>
+                  <li>❓ Phomemo M120 (untested)</li>
+                  <li>❓ Phomemo M220 (untested)</li>
+                </ul>
+                <p style={{ fontSize: '0.85rem', marginTop: '8px', fontStyle: 'italic' }}>
+                  Have a different model? Please report if it works at{' '}
+                  <a href="https://github.com/mitchelloharawild/phomemo-pwa/issues" target="_blank" rel="noopener noreferrer">
+                    github.com/mitchelloharawild/phomemo-pwa
+                  </a>
+                </p>
+              </div>
+              
+              <div className="guide-section">
+                <h4>Quick Start</h4>
+                <ol>
+                  <li>Click "Connect printer" above</li>
+                  <li>Select your Phomemo printer from the dialog</li>
+                  <li>Configure your paper settings</li>
+                  <li>Choose or create a template</li>
+                  <li>Design and print your stickers</li>
+                </ol>
+              </div>
+              
+              <div className="guide-section tips-section">
+                <h4>✨ Features</h4>
+                <ul>
+                  <li>Device-specific settings saved automatically</li>
+                  <li>Real-time preview of your design</li>
+                  <li>Customizable SVG templates</li>
+                  <li>Works offline after first load</li>
+                </ul>
+              </div>
+            </div>
+          </>
+        ) : (
+          <>
+            <div className="connection-controls">
+              <button 
+                className="print-button disconnect-button" 
+                onClick={handleDisconnect}
+              >
+                Disconnect
+              </button>
+              <button 
+                className="settings-button-small" 
+                onClick={() => setIsSetupModalOpen(true)}
+                title="Printer Settings"
+              >
+                ⚙️
+              </button>
+            </div>
+            
             <button 
               className="print-button paper-settings-button" 
               onClick={() => setIsPaperSettingsModalOpen(true)}
@@ -174,28 +224,28 @@ function App() {
             >
               📋 Template Manager
             </button>
+            
+            <PrinterForm 
+              template={currentTemplate}
+              textFieldValues={textFieldValues}
+              onTextFieldChange={handleTextFieldChange}
+            />
+
+            <button 
+              className="print-button" 
+              onClick={handlePrint}
+              disabled={!isConnected}
+            >
+              🖨 Print Sticker
+            </button>
+
+            <PrinterCanvas 
+              template={currentTemplate}
+              textFieldValues={textFieldValues}
+              printerConfig={printerConfig} 
+            />
           </>
         )}
-        
-        <PrinterForm 
-          template={currentTemplate}
-          textFieldValues={textFieldValues}
-          onTextFieldChange={handleTextFieldChange}
-        />
-
-        <button 
-          className="print-button" 
-          onClick={handlePrint}
-          disabled={!isConnected}
-        >
-          🖨 Print Sticker
-        </button>
-
-        <PrinterCanvas 
-          template={currentTemplate}
-          textFieldValues={textFieldValues}
-          printerConfig={printerConfig} 
-        />
       </div>
 
       <PrinterSetupModal

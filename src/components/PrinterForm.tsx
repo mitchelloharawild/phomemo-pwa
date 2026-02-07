@@ -1,5 +1,6 @@
 import React from 'react';
 import type { Template } from '../types';
+import { extractMultiLineFields } from '../utils/svgTextUtils';
 import './PrinterForm.css';
 
 interface PrinterFormProps {
@@ -13,27 +14,7 @@ const PrinterForm = ({ template, textFieldValues, onTextFieldChange }: PrinterFo
     onTextFieldChange(fieldId, value);
   };
 
-  const extractMultiLineFields = (svgContent: string): Set<string> => {
-    const parser = new DOMParser();
-    const svgDoc = parser.parseFromString(svgContent, 'image/svg+xml');
-    const textElements = svgDoc.querySelectorAll('text[id]');
-    
-    const multiLine = new Set<string>();
-    
-    textElements.forEach(el => {
-      const id = el.getAttribute('id');
-      if (id) {
-        const tspans = el.querySelectorAll('tspan');
-        if (tspans.length > 0) {
-          multiLine.add(id);
-        }
-      }
-    });
-    
-    return multiLine;
-  };
-
-  if (!template) {
+if (!template) {
     return (
       <div className="printer-form">
         <div className="no-template-message">

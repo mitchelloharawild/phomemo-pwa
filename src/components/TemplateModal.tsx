@@ -1,13 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 import type { Template } from '../types';
-import {
-  loadTemplates,
-  saveTemplate,
-  deleteTemplate,
-  generateTemplateId,
-  updateTemplateUsage,
-  isDefaultTemplate
+import { 
+  saveTemplate, 
+  loadTemplates, 
+  deleteTemplate, 
+  generateTemplateId, 
+  isDefaultTemplate,
+  updateTemplateUsage 
 } from '../utils/templateStorage';
+import { extractTextFieldIds } from '../utils/svgTextUtils';
 import './TemplateModal.css';
 
 interface TemplateModalProps {
@@ -49,34 +50,11 @@ const TemplateModal: React.FC<TemplateModalProps> = ({
     setTemplates(sorted);
   };
 
-  const extractTextFieldIds = (svgContent: string): { ids: string[], defaults: Record<string, string> } => {
-    const parser = new DOMParser();
-    const svgDoc = parser.parseFromString(svgContent, 'image/svg+xml');
-    const textElements = svgDoc.querySelectorAll('text[id]');
-    
-    const ids: string[] = [];
-    const defaults: Record<string, string> = {};
-    
-    textElements.forEach(el => {
-      const id = el.getAttribute('id');
-      if (id) {
-        ids.push(id);
-        
-        // Check if text element has tspan children (multi-line)
-        const tspans = el.querySelectorAll('tspan');
-        if (tspans.length > 0) {
-          const lines: string[] = [];
-          tspans.forEach(tspan => {
-            lines.push(tspan.textContent || '');
-          });
-          defaults[id] = lines.join('\n');
-        } else {
-          defaults[id] = el.textContent || '';
-        }
-      }
-    });
-    
-    return { ids, defaults };
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setSelectedFile(file);
+    }
   };
 
   const generateThumbnail = async (svgContent: string): Promise<string> => {

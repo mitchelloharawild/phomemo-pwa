@@ -88,7 +88,7 @@ h2 {
   margin-bottom: 10px;
 }
 
-.print-button.connect-button:hover {
+.print-button.connect-button:hover:not(:disabled) {
   background-color: #3d8b40;
 }
 
@@ -122,9 +122,131 @@ h2 {
   background-color: #7B1FA2;
 }
 
+/* Browser Warning Styles */
+.browser-warning {
+  width: 100%;
+  margin-bottom: 15px;
+  padding: 12px 15px;
+  background-color: #5a5a5a;
+  border-radius: 5px;
+  border-left: 3px solid #ff9800;
+  color: #fff;
+  text-align: left;
+}
+
+.browser-warning p {
+  margin: 0 0 6px 0;
+  font-size: 0.85rem;
+  line-height: 1.4;
+  color: #ddd;
+}
+
+.browser-warning p:last-child {
+  margin-bottom: 0;
+}
+
+.browser-warning strong {
+  color: #ff9800;
+}
+
+/* Quick Start Guide Styles */
+.quick-start-guide {
+  width: 100%;
+  margin-top: 20px;
+  text-align: left;
+}
+
+.quick-start-guide h3 {
+  margin: 0 0 15px 0;
+  color: #4CAF50;
+  font-size: 1.3rem;
+  text-align: center;
+}
+
+.guide-section {
+  margin-bottom: 15px;
+  padding: 15px;
+  background-color: #555;
+  border-radius: 5px;
+  border-left: 3px solid #4CAF50;
+}
+
+.guide-section h4 {
+  margin: 0 0 8px 0;
+  color: #fff;
+  font-size: 1rem;
+}
+
+.guide-section p {
+  margin: 0 0 8px 0;
+  line-height: 1.5;
+  color: #ddd;
+  font-size: 0.9rem;
+}
+
+.guide-section p:last-child {
+  margin-bottom: 0;
+}
+
+.guide-section ul,
+.guide-section ol {
+  margin: 8px 0 0 0;
+  padding-left: 20px;
+}
+
+.guide-section li {
+  margin-bottom: 5px;
+  line-height: 1.5;
+  color: #ddd;
+  font-size: 0.9rem;
+}
+
+.guide-section li:last-child {
+  margin-bottom: 0;
+}
+
+.guide-section.tips-section {
+  border-left-color: #FFC107;
+}
+
+.guide-section a {
+  color: #4CAF50;
+  text-decoration: none;
+}
+
+.guide-section a:hover {
+  text-decoration: underline;
+}
+
 @media (max-width: 480px) {
   .form-container {
     padding: 15px;
     max-width: 100%;
+  }
+  
+  .browser-warning {
+    padding: 12px;
+  }
+  
+  .browser-warning h3 {
+    font-size: 1rem;
+  }
+  
+  .browser-warning p,
+  .browser-warning li {
+    font-size: 0.85rem;
+  }
+  
+  .guide-section {
+    padding: 12px;
+  }
+  
+  .guide-section h4 {
+    font-size: 0.95rem;
+  }
+  
+  .guide-section p,
+  .guide-section li {
+    font-size: 0.85rem;
   }
 }

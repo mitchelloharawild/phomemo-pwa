@@ -78,13 +78,8 @@ export const generateTemplateId = (): string => {
 };
 
 export const createDefaultTemplate = (): Template => {
-  const svgContent = `<svg xmlns="http://www.w3.org/2000/svg" width="384" height="200" viewBox="0 0 384 200">
-  <rect width="384" height="200" fill="white"/>
-  <text id="Text" x="192" y="100" font-family="Arial, sans-serif" font-size="24" text-anchor="middle" dominant-baseline="middle" fill="black">
-    <tspan x="192" y="70">Line 1</tspan>
-    <tspan x="192" y="100">Line 2</tspan>
-    <tspan x="192" y="130">Line 3</tspan>
-  </text>
+  const svgContent = `<svg width="3cm" height="2cm" version="1.1" viewBox="0 0 113.39 75.591" xmlns="http://www.w3.org/2000/svg">
+ <text id="Text" x="50%" y="50%" dominant-baseline="middle" font-family="Arial, sans-serif" font-size="32px" text-anchor="middle" style="line-height:1"><tspan x="56.695" y="37.7955"/></text>
 </svg>`;
 
   return {
@@ -92,7 +87,7 @@ export const createDefaultTemplate = (): Template => {
     name: 'No template',
     svgContent,
     textFieldIds: ['Text'],
-    textFieldValues: { Text: 'Line 1\nLine 2\nLine 3' },
+    textFieldValues: { Text: 'Line 1\\nLine 2\\nLine 3' },
     createdAt: 0, // epoch 0 to indicate it's a default template
     lastUsedAt: 0
   };
