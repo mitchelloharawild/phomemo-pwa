@@ -1,7 +1,10 @@
 {
-  "version": "1.0.2",
+  "version": "1.1.0",
   "date": "2026-02-15",
   "changes": [
-    "Added version to main page with manual update checking button"
+    "Rebranded project to labelync with updated logo and banners",
+    "Updated documentation and README",
+    "Improved GitHub release and deployment workflow",
+    "Added OpenGraph image for better social media sharing"
   ]
 }
