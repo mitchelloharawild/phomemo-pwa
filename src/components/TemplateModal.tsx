@@ -192,7 +192,7 @@ const TemplateModal: React.FC<TemplateModalProps> = ({
       <input
         ref={fileInputRef}
         type="file"
-        accept=".svg,image/svg+xml"
+        accept="*/*"
         onChange={handleUploadTemplate}
         style={{ display: 'none' }}
       />
