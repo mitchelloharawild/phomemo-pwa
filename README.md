@@ -4,7 +4,7 @@ A modern Progressive Web App (PWA) for printing custom stickers using the Phomem
 
 > **Disclaimer:** This project was mostly vibe-coded with Claude 🤖
 > 
-> Please report any issues here: <https://github.com/mitchelloharawild/phomemo-pwa/issues>
+> Please report any issues here: <https://github.com/mitchelloharawild/labelync/issues>
 
 This app uses the [Web Serial API over Bluetooth](https://developer.chrome.com/blog/serial-over-bluetooth/), which requires a modern Chromium-based web browser (Chrome/Chromium 89+, Microsoft Edge 89+, Opera 75+). Safari and Firefox do not currently support the Web Serial API.
 
@@ -20,7 +20,7 @@ I personally own and use a Phomemo M110, and I have not been able to test other 
 
 ## 🚀 Quick Start
 
-Simply visit <https://pkg.mitchelloharawild.com/phomemo-pwa> to start using the app immediately - no installation required!
+Simply visit <https://pkg.mitchelloharawild.com/labelync> to start using the app immediately - no installation required!
 
 ## ✨ Features
 
@@ -35,7 +35,7 @@ Simply visit <https://pkg.mitchelloharawild.com/phomemo-pwa> to start using the 
 
 ## 📖 Usage Guide
 
-1. **Access the app** - Navigate to <https://pkg.mitchelloharawild.com/phomemo-pwa>
+1. **Access the app** - Navigate to <https://pkg.mitchelloharawild.com/labelync>
 2. **Connect printer** 
    - Click the "Connect printer" button
    - Select your Phomemo printer from the device list
@@ -67,8 +67,8 @@ Simply visit <https://pkg.mitchelloharawild.com/phomemo-pwa> to start using the 
 
 ```bash
 # Clone the repository
-git clone https://github.com/mitchelloharawild/phomemo-pwa.git
-cd phomemo-pwa
+git clone https://github.com/mitchelloharawild/labelync.git
+cd labelync
 
 # Install dependencies
 npm install

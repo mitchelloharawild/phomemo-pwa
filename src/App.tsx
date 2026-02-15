@@ -259,8 +259,8 @@ function App() {
                 </ul>
                 <p style={{ fontSize: '0.85rem', marginTop: '8px', fontStyle: 'italic' }}>
                   Have a different model? Please report if it works at{' '}
-                  <a href="https://github.com/mitchelloharawild/phomemo-pwa/issues" target="_blank" rel="noopener noreferrer">
-                    github.com/mitchelloharawild/phomemo-pwa
+                  <a href="https://github.com/mitchelloharawild/labelync/issues" target="_blank" rel="noopener noreferrer">
+                    github.com/mitchelloharawild/labelync
                   </a>
                 </p>
               </div>

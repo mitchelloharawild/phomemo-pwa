@@ -71,4 +71,4 @@ Use cases:
 
 ## Contributing
 
-Have you created a useful template? Consider sharing it, [pull requests](github.com/mitchelloharawild/phomemo-pwa/pulls) with additional templates are welcomed!
+Have you created a useful template? Consider sharing it, [pull requests](github.com/mitchelloharawild/labelync/pulls) with additional templates are welcomed!
