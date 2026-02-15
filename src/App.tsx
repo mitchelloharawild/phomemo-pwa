@@ -12,6 +12,9 @@ import { getTemplate, getDefaultTemplate } from './utils/templateStorage';
 import type { Template, PrinterConfig } from './types';
 import './App.css';
 
+// @ts-ignore - Import version from package.json
+import { version as APP_VERSION } from '../package.json';
+
 function App() {
   const [currentTemplate, setCurrentTemplate] = useState<Template>(getDefaultTemplate());
   const [textFieldValues, setTextFieldValues] = useState<Record<string, string>>(
@@ -26,7 +29,7 @@ function App() {
   const [isTemplateModalOpen, setIsTemplateModalOpen] = useState(false);
 
   const [isConnecting, setIsConnecting] = useState(false);
-  const [notification, setNotification] = useState<{ message: string; type: 'error' | 'success' } | null>(null);
+  const [notification, setNotification] = useState<{ message: string; type: 'error' | 'success' | 'info' } | null>(null);
 
   const { isConnected, deviceId, connect, disconnect, printImage } = usePrinter();
 
@@ -152,6 +155,67 @@ function App() {
 
   const handleFieldVisibilityChange = (fieldId: string, isHidden: boolean) => {
     setHiddenFields(prev => ({ ...prev, [fieldId]: isHidden }));
+  };
+
+  const handleCheckForUpdates = async () => {
+    // Trigger a service worker update check
+    if ('serviceWorker' in navigator) {
+      try {
+        const registration = await navigator.serviceWorker.getRegistration();
+        if (registration) {
+          // Set up a listener to detect if an update is found
+          let updateFound = false;
+          
+          const updateListener = () => {
+            updateFound = true;
+          };
+          
+          registration.addEventListener('updatefound', updateListener);
+          
+          // Force the service worker to check for updates
+          await registration.update();
+          
+          // Give it a moment to detect updates
+          await new Promise(resolve => setTimeout(resolve, 1000));
+          
+          // Clean up listener
+          registration.removeEventListener('updatefound', updateListener);
+          
+          if (updateFound) {
+            setNotification({
+              type: 'info',
+              message: 'Update found! You will be notified when it\'s ready to install.'
+            });
+          } else {
+            setNotification({
+              type: 'success',
+              message: 'No updates available. You\'re running the latest version!'
+            });
+          }
+          
+          setTimeout(() => setNotification(null), 3000);
+        } else {
+          setNotification({
+            type: 'error',
+            message: 'Service worker not registered. Unable to check for updates.'
+          });
+          setTimeout(() => setNotification(null), 3000);
+        }
+      } catch (error) {
+        console.error('Failed to check for updates:', error);
+        setNotification({
+          type: 'error',
+          message: 'Failed to check for updates. Please try again.'
+        });
+        setTimeout(() => setNotification(null), 3000);
+      }
+    } else {
+      setNotification({
+        type: 'error',
+        message: 'Service workers not supported in this browser.'
+      });
+      setTimeout(() => setNotification(null), 3000);
+    }
   };
 
   return (
@@ -286,6 +350,17 @@ function App() {
             />
           </>
         )}
+        
+        <footer className="app-footer">
+          <span className="version-text">v{APP_VERSION}</span>
+          <button 
+            className="check-updates-button"
+            onClick={handleCheckForUpdates}
+            title="Check for updates on GitHub"
+          >
+            Check for Updates
+          </button>
+        </footer>
       </div>
 
       <PrinterSetupModal

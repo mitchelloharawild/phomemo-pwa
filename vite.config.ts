@@ -8,7 +8,7 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'prompt',
-      includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'mask-icon.svg'],
+      includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'mask-icon.svg', 'release-notes.json'],
       devOptions: {
         enabled: true,
         type: 'module',
@@ -40,8 +40,23 @@ export default defineConfig({
         ]
       },
       workbox: {
-        globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
+        globPatterns: ['**/*.{js,css,html,ico,png,svg,json}'],
+        // Don't cache release-notes.json so we always fetch the latest
+        navigateFallbackDenylist: [/\/release-notes\.json$/],
         runtimeCaching: [
+          {
+            // Ensure release-notes.json is always fetched fresh
+            urlPattern: /\/release-notes\.json$/,
+            handler: 'NetworkFirst',
+            options: {
+              cacheName: 'release-notes-cache',
+              networkTimeoutSeconds: 5,
+              expiration: {
+                maxEntries: 1,
+                maxAgeSeconds: 60 // 1 minute
+              }
+            }
+          },
           {
             urlPattern: /^https:\/\/cdn\.jsdelivr\.net\/.*/i,
             handler: 'CacheFirst',
