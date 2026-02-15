@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.0.1] - 2026-02-15
+
+- Change template file picker to accept any file (preventing photo specific picker on Android)
+
+
 ## [1.0.0] - 2026-02-15
 
 - Initial release with PWA support
