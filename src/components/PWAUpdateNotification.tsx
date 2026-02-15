@@ -1,5 +1,5 @@
 import { useRegisterSW } from 'virtual:pwa-register/react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import './PWAUpdateNotification.css';
 
 interface ReleaseNotes {
@@ -13,26 +13,12 @@ export function PWAUpdateNotification() {
   const [showDetails, setShowDetails] = useState(false);
 
   const {
-    offlineReady: [offlineReady, setOfflineReady],
+    offlineReady: [, setOfflineReady],
     needRefresh: [needRefresh, setNeedRefresh],
     updateServiceWorker,
   } = useRegisterSW({
-    onRegisteredSW(swUrl, r) {
-      r && setInterval(async () => {
-        if (!(!r.installing && navigator)) return;
-
-        if (('connection' in navigator) && !(navigator as any).onLine) return;
-
-        const resp = await fetch(swUrl, {
-          cache: 'no-store',
-          headers: {
-            'cache': 'no-store',
-            'cache-control': 'no-cache',
-          },
-        });
-
-        if (resp?.status === 200) await r.update();
-      }, 60 * 60 * 1000); // Check every hour
+    onRegistered(r: ServiceWorkerRegistration | undefined) {
+      r && setInterval(() => r.update(), 60 * 60 * 1000); // Check every hour
     },
     onNeedRefresh() {
       // Fetch release notes when update is available

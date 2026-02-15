@@ -129,7 +129,7 @@ export const updateSVGTextFields = async (
         await updateQRCodeElement(svgDoc, id, value, metadata);
         return;
       } else if (metadata.type === FieldType.DATE) {
-        const formattedDate = updateDateElement(svgDoc, id, value, metadata);
+        const formattedDate = updateDateElement(value, metadata);
         value = formattedDate;
       } else if (metadata.type === FieldType.IMAGE) {
         updateImageElement(svgDoc, id, value, metadata);
@@ -137,8 +137,8 @@ export const updateSVGTextFields = async (
       }
     }
 
-    const textElement = element as SVGTextElement;
-    if (textElement.tagName !== 'text') return;
+    if (element.tagName !== 'text') return;
+    const textElement = element as unknown as SVGTextElement;
 
     updateTextElement(svgDoc, textElement, value);
   });

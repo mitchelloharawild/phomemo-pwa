@@ -53,24 +53,8 @@ const drawSVGTemplate = async (
   const svgDoc = parser.parseFromString(template.svgContent, 'image/svg+xml');
   const svgElement = svgDoc.querySelector('svg');
   
-  if (!svgElement) return;
-
-  // Get SVG dimensions
-  const widthAttr = svgElement.getAttribute('width') || '384';
-  let svgWidth: number;
   
-  // If width contains non-numeric characters (like 'cm', 'mm', etc.), use viewBox instead
-  if (widthAttr.match(/[a-z]/i)) {
-    const viewBox = svgElement.getAttribute('viewBox');
-    if (viewBox) {
-      const viewBoxValues = viewBox.split(/\s+/);
-      svgWidth = parseFloat(viewBoxValues[2]) || 384;
-    } else {
-      svgWidth = 384;
-    }
-  } else {
-    svgWidth = parseFloat(widthAttr);
-  }
+  if (!svgElement) return;
 
   // Hide elements marked as hidden
   Object.entries(hiddenFields).forEach(([fieldId, isHidden]) => {

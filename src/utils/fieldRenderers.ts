@@ -1,7 +1,7 @@
 // Utilities for rendering special field types (QR codes, dates, images)
 
 import QRCode from 'qrcode';
-import { FieldMetadata, FieldType } from '../types';
+import { FieldMetadata } from '../types';
 
 /**
  * Format a date string according to the specified format
@@ -114,8 +114,6 @@ export const updateQRCodeElement = async (
  * Update a text element to display a formatted date
  */
 export const updateDateElement = (
-  svgDoc: Document,
-  fieldId: string,
   value: string,
   metadata: FieldMetadata
 ): string => {

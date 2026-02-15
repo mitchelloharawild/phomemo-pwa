@@ -142,6 +142,9 @@ export const usePrinter = (): UsePrinterReturn => {
     ]);
 
     try {
+      if (!serialPort.writable) {
+        throw new Error('Serial port is not writable');
+      }
       const writer = serialPort.writable.getWriter();
 
       await writer.write(HEADER);

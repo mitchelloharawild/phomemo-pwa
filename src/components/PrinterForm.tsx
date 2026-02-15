@@ -1,5 +1,4 @@
-import React from 'react';
-import type { Template, FieldType } from '../types';
+import type { Template } from '../types';
 import { extractMultiLineFields } from '../utils/svgTextUtils';
 import './PrinterForm.css';
 
