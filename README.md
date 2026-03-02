@@ -34,6 +34,7 @@ I personally own and use a Phomemo M110, and I have not been able to test other 
 - 🔒 **Privacy First** - All processing happens locally in your browser
 - 🎨 **SVG Templates** - Use customizable SVG templates with replaceable content
 - 📅 **Special Field Types** - Support for dates, QR codes, and image uploads in templates
+- 🎭 **Image Dithering** - Floyd-Steinberg dithering of colours for quality thermal printing
 
 ## 📖 Usage Guide
 
